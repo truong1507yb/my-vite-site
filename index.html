@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Watermark Trust - Xác Thực Bản Quyền Ảnh Chuyên Nghiệp</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- Sidebar / Bảng điều khiển -->
+      <aside class="control-panel">
+        <header class="app-header">
+          <div class="logo-area">
+            <div class="logo-icon">
+              <i data-lucide="shield-check"></i>
+            </div>
+            <div>
+              <h1>Watermark Trust</h1>
+              <p class="subtitle">Bảo vệ & Xác thực ảnh Facebook</p>
+            </div>
+          </div>
+          <div class="header-actions">
+            <span class="badge-secure">
+              <i data-lucide="lock"></i> Bảo mật 100% tại Client
+            </span>
+            <button class="btn-guide-trigger" id="btn-guide-trigger" title="Hướng dẫn xác minh Facebook">
+              <i data-lucide="help-circle"></i> Xác minh Facebook?
+            </button>
+          </div>
+        </header>
+
+        <main class="controls-scroll">
+          <!-- Step 1: Upload Ảnh Gốc -->
+          <section class="control-section">
+            <h2 class="section-title">
+              <span class="step-num">1</span> Chọn ảnh cần đóng dấu
+            </h2>
+            <div class="upload-zone" id="upload-zone">
+              <input type="file" id="image-input" accept="image/*" class="file-input-hidden" />
+              <div class="upload-content">
+                <i data-lucide="image-plus" class="upload-icon"></i>
+                <p class="upload-text">Kéo thả ảnh hoặc <span class="highlight">chọn file</span></p>
+                <p class="upload-hint">PNG, JPG, WebP, JPEG...</p>
+              </div>
+              <div class="upload-preview-container hidden" id="upload-preview-container">
+                <span class="file-name" id="file-name-display">filename.jpg</span>
+                <button type="button" class="btn-remove-img" id="btn-remove-img" title="Xóa ảnh">
+                  <i data-lucide="x"></i>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Step 2: Cài Đặt Facebook Page (Dữ liệu xác thực) -->
+          <section class="control-section">
+            <h2 class="section-title">
+              <span class="step-num">2</span> Thông tin xác thực (Facebook)
+            </h2>
+            <div class="form-group">
+              <label for="fb-name-input">Tên Trang / Thương hiệu</label>
+              <div class="input-with-icon">
+                <i data-lucide="user"></i>
+                <input type="text" id="fb-name-input" placeholder="Ví dụ: Anh Tin Cậy" value="Anh Tin Cậy" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="fb-url-input">Link Facebook Page (Tạo mã QR)</label>
+              <div class="input-with-icon">
+                <i data-lucide="link"></i>
+                <input type="url" id="fb-url-input" placeholder="https://facebook.com/page..." value="https://facebook.com" />
+              </div>
+            </div>
+          </section>
+
+          <!-- Step 3: Chọn Loại Đóng Dấu -->
+          <section class="control-section">
+            <h2 class="section-title">
+              <span class="step-num">3</span> Thiết lập Watermark
+            </h2>
+            
+            <div class="tabs-header">
+              <button class="tab-btn active" data-tab="tab-text">
+                <i data-lucide="type"></i> Đóng dấu chữ
+              </button>
+              <button class="tab-btn" data-tab="tab-logo">
+                <i data-lucide="file-image"></i> Đóng dấu Logo
+              </button>
+            </div>
+
+            <!-- Tab 1: Đóng dấu Chữ -->
+            <div class="tab-content" id="tab-text">
+              <div class="form-group">
+                <label for="watermark-text-input">Nội dung chữ bản quyền</label>
+                <input type="text" id="watermark-text-input" placeholder="© 2026 Anh Tin Cậy" value="© 2026 Anh Tin Cậy" />
+              </div>
+
+              <div class="checkbox-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="add-verified-badge" checked />
+                  <span class="checkbox-custom"></span>
+                  <span class="label-text">
+                    Thêm Tích Xanh Facebook <i data-lucide="check-circle-2" class="badge-blue-inline"></i>
+                  </span>
+                </label>
+              </div>
+
+              <div class="checkbox-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="add-qr-badge" checked />
+                  <span class="checkbox-custom"></span>
+                  <span class="label-text">Thêm Mã QR quét xác thực Page</span>
+                </label>
+              </div>
+
+              <div class="checkbox-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="add-card-bg" checked />
+                  <span class="checkbox-custom"></span>
+                  <span class="label-text">Khung nền bảo vệ (Glassmorphic Card)</span>
+                </label>
+              </div>
+
+              <div class="grid-2-col">
+                <div class="form-group">
+                  <label for="watermark-font">Font chữ</label>
+                  <select id="watermark-font">
+                    <option value="Plus Jakarta Sans">Jakarta Sans</option>
+                    <option value="Montserrat">Montserrat</option>
+                    <option value="Georgia">Georgia (Cổ điển)</option>
+                    <option value="Arial">Arial (Tối giản)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="watermark-color">Màu sắc</label>
+                  <div class="color-picker-wrapper">
+                    <input type="color" id="watermark-color" value="#ffffff" />
+                    <span class="color-hex-text" id="color-hex-val">#ffffff</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="slider-header">
+                  <label for="watermark-size-slider">Kích thước dấu</label>
+                  <span class="slider-val" id="text-size-val">40px</span>
+                </div>
+                <input type="range" id="watermark-size-slider" min="12" max="150" value="32" class="slider" />
+              </div>
+
+              <div class="form-group">
+                <div class="slider-header">
+                  <label for="watermark-opacity-slider">Độ trong suốt (Opacity)</label>
+                  <span class="slider-val" id="text-opacity-val">80%</span>
+                </div>
+                <input type="range" id="watermark-opacity-slider" min="10" max="100" value="80" class="slider" />
+              </div>
+
+              <div class="form-group">
+                <div class="slider-header">
+                  <label for="watermark-rotation-slider">Góc xoay</label>
+                  <span class="slider-val" id="text-rotation-val">0°</span>
+                </div>
+                <input type="range" id="watermark-rotation-slider" min="-180" max="180" value="0" class="slider" />
+              </div>
+            </div>
+
+            <!-- Tab 2: Đóng dấu Logo -->
+            <div class="tab-content hidden" id="tab-logo">
+              <div class="form-group">
+                <label>Tải lên Logo của bạn (PNG)</label>
+                <div class="logo-upload-box" id="logo-upload-box">
+                  <input type="file" id="logo-input" accept="image/*" class="file-input-hidden" />
+                  <div class="logo-upload-content">
+                    <i data-lucide="upload-cloud"></i>
+                    <span>Tải logo lên (khuyên dùng PNG trong suốt)</span>
+                  </div>
+                  <div class="logo-preview-container hidden" id="logo-preview-container">
+                    <img id="logo-preview-img" src="" alt="Logo Preview" />
+                    <button type="button" class="btn-remove-logo" id="btn-remove-logo"><i data-lucide="x"></i></button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="checkbox-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="logo-add-qr-badge" />
+                  <span class="checkbox-custom"></span>
+                  <span class="label-text">Đi kèm Mã QR quét xác thực Page</span>
+                </label>
+              </div>
+
+              <div class="checkbox-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="logo-add-card-bg" checked />
+                  <span class="checkbox-custom"></span>
+                  <span class="label-text">Khung nền bảo vệ (Glassmorphic Card)</span>
+                </label>
+              </div>
+
+              <div class="form-group">
+                <div class="slider-header">
+                  <label for="logo-size-slider">Kích thước Logo</label>
+                  <span class="slider-val" id="logo-size-val">120px</span>
+                </div>
+                <input type="range" id="logo-size-slider" min="20" max="400" value="120" class="slider" />
+              </div>
+
+              <div class="form-group">
+                <div class="slider-header">
+                  <label for="logo-opacity-slider">Độ trong suốt (Opacity)</label>
+                  <span class="slider-val" id="logo-opacity-val">80%</span>
+                </div>
+                <input type="range" id="logo-opacity-slider" min="10" max="100" value="80" class="slider" />
+              </div>
+
+              <div class="form-group">
+                <div class="slider-header">
+                  <label for="logo-rotation-slider">Góc xoay</label>
+                  <span class="slider-val" id="logo-rotation-val">0°</span>
+                </div>
+                <input type="range" id="logo-rotation-slider" min="-180" max="180" value="0" class="slider" />
+              </div>
+            </div>
+
+            <!-- Vị trí đóng dấu -->
+            <div class="form-group">
+              <label>Vị trí Watermark</label>
+              <div class="position-settings-grid">
+                <div class="position-grid-container" id="position-grid">
+                  <button type="button" class="pos-btn" data-pos="tl" title="Góc trên trái"></button>
+                  <button type="button" class="pos-btn" data-pos="tc" title="Giữa phía trên"></button>
+                  <button type="button" class="pos-btn" data-pos="tr" title="Góc trên phải"></button>
+                  <button type="button" class="pos-btn" data-pos="ml" title="Giữa bên trái"></button>
+                  <button type="button" class="pos-btn" data-pos="cc" title="Chính giữa"></button>
+                  <button type="button" class="pos-btn" data-pos="mr" title="Giữa bên phải"></button>
+                  <button type="button" class="pos-btn" data-pos="bl" title="Góc dưới trái"></button>
+                  <button type="button" class="pos-btn" data-pos="bc" title="Giữa phía dưới"></button>
+                  <button type="button" class="pos-btn active" data-pos="br" title="Góc dưới phải"></button>
+                </div>
+                <div class="position-tiled-wrapper">
+                  <label class="checkbox-label flex-row">
+                    <input type="checkbox" id="watermark-tile-toggle" />
+                    <span class="checkbox-custom"></span>
+                    <span class="label-text">Lặp lại phủ kín ảnh (Tiled)</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Step 4: Bản Mẫu Tinh Tế (Presets) -->
+          <section class="control-section">
+            <h2 class="section-title">
+              <span class="step-num">4</span> Chọn mẫu chuyên nghiệp nhanh
+            </h2>
+            <div class="presets-grid">
+              <button type="button" class="preset-btn" id="preset-circular">
+                <i data-lucide="circle-dot"></i> Con dấu tròn uy tín
+              </button>
+              <button type="button" class="preset-btn" id="preset-bar">
+                <i data-lucide="rectangle-horizontal"></i> Thanh bản quyền dưới
+              </button>
+              <button type="button" class="preset-btn" id="preset-tile">
+                <i data-lucide="layout-grid"></i> Phủ kín chống copy
+              </button>
+              <button type="button" class="preset-btn" id="preset-verified">
+                <i data-lucide="check-circle-2"></i> Tích xanh tối giản
+              </button>
+            </div>
+          </section>
+        </main>
+      </aside>
+
+      <!-- Preview Area / Màn hình xem trước & Tải về -->
+      <main class="preview-panel">
+        <header class="preview-header">
+          <div class="preview-title-block">
+            <h3>Màn hình xem trước trực quan</h3>
+            <p>Mọi chỉnh sửa của bạn được hiển thị theo thời gian thực</p>
+          </div>
+          <div class="hash-badge-container hidden" id="hash-badge-container">
+            <span class="hash-label">Mã SHA-256 đối chiếu:</span>
+            <code class="hash-code" id="image-hash-val">SHA-256...</code>
+            <button class="btn-copy-hash" id="btn-copy-hash" title="Sao chép mã Hash">
+              <i data-lucide="copy"></i>
+            </button>
+          </div>
+          <div class="canvas-controls">
+            <button type="button" class="canvas-control-btn" id="btn-zoom-out" title="Thu nhỏ">
+              <i data-lucide="zoom-out"></i>
+            </button>
+            <span class="zoom-level" id="zoom-level-val">100%</span>
+            <button type="button" class="canvas-control-btn" id="btn-zoom-in" title="Phóng to">
+              <i data-lucide="zoom-in"></i>
+            </button>
+            <button type="button" class="canvas-control-btn" id="btn-fit-screen" title="Vừa màn hình">
+              <i data-lucide="maximize-2"></i>
+            </button>
+          </div>
+        </header>
+
+        <div class="canvas-workspace">
+          <div class="canvas-scroll-container" id="canvas-scroll-container">
+            <!-- Canvas thật sự -->
+            <canvas id="preview-canvas"></canvas>
+            
+            <!-- Trạng thái trống (khi chưa tải ảnh) -->
+            <div class="canvas-placeholder" id="canvas-placeholder">
+              <div class="placeholder-icon-glow">
+                <i data-lucide="image"></i>
+              </div>
+              <h4>Chưa có ảnh nào được tải lên</h4>
+              <p>Hãy kéo thả một ảnh hoặc bấm chọn file ở bảng điều khiển bên trái để bắt đầu đóng dấu bảo quyền chuyên nghiệp</p>
+            </div>
+          </div>
+        </div>
+
+        <footer class="export-bar">
+          <div class="export-options">
+            <div class="form-group-inline">
+              <label for="export-format">Định dạng:</label>
+              <select id="export-format">
+                <option value="original">Giữ nguyên định dạng gốc</option>
+                <option value="image/png">PNG (Chất lượng cao nhất)</option>
+                <option value="image/jpeg">JPEG (Dung lượng nhỏ hơn)</option>
+              </select>
+            </div>
+            <div class="form-group-inline hidden" id="jpeg-quality-wrapper">
+              <label for="export-quality">Chất lượng:</label>
+              <input type="range" id="export-quality" min="50" max="100" value="92" class="slider-small" />
+              <span class="quality-val" id="quality-val-display">92%</span>
+            </div>
+          </div>
+          <div class="export-actions-group">
+            <button type="button" class="btn-certificate" id="btn-certificate" disabled title="Tải Giấy chứng nhận bản quyền kỹ thuật số">
+              <i data-lucide="award"></i> TẢI CHỨNG NHẬN (TXT)
+            </button>
+            <button type="button" class="btn-download" id="download-btn" disabled>
+              <i data-lucide="download"></i> TẢI ẢNH BẢN QUYỀN (HD)
+            </button>
+          </div>
+        </footer>
+      </main>
+    </div>
+    
+    <!-- Modal Hướng dẫn Facebook Rights Manager -->
+    <div class="modal-overlay hidden" id="guide-modal">
+      <div class="modal-card">
+        <header class="modal-header">
+          <div class="modal-title">
+            <i data-lucide="shield-check" class="modal-icon"></i>
+            <h3>Xác thực bản quyền trên Facebook</h3>
+          </div>
+          <button type="button" class="btn-close-modal" id="btn-close-modal"><i data-lucide="x"></i></button>
+        </header>
+        <main class="modal-body">
+          <p class="modal-intro">Facebook sử dụng hệ thống tự động <strong>Meta Rights Manager</strong> để bảo vệ ảnh của các đối tác nội dung. Để Facebook tự động quét chặn ảnh reup của bạn:</p>
+          
+          <div class="guide-steps">
+            <div class="guide-step">
+              <div class="step-num-badge">1</div>
+              <div class="step-content">
+                <h4>Đăng ký sở hữu nội dung với Meta</h4>
+                <p>Vào Meta Business Suite -> chọn <strong>Rights Manager (Trình quản lý bản quyền)</strong> -> Gửi yêu cầu đăng ký hình ảnh.</p>
+              </div>
+            </div>
+            <div class="guide-step">
+              <div class="step-num-badge">2</div>
+              <div class="step-content">
+                <h4>Tải lên "Tệp tham chiếu" (Reference Files)</h4>
+                <p>Tải ảnh đã đóng dấu từ web này lên Rights Manager. Thuật toán của Meta sẽ tự động ghi nhớ vân tay bức ảnh của bạn.</p>
+              </div>
+            </div>
+            <div class="guide-step">
+              <div class="step-num-badge">3</div>
+              <div class="step-content">
+                <h4>Sử dụng mã Hash SHA-256 khi cần đối soát</h4>
+                <p>Mã hóa <strong>SHA-256 Hash</strong> đi kèm là bằng chứng toán học chứng minh sự tồn tại nguyên bản của bức ảnh. Hãy dùng Giấy chứng nhận (TXT) tải về để giải trình nếu có khiếu nại tranh chấp trên Facebook.</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="modal-hash-box">
+            <span class="box-label">Mã SHA-256 đối chiếu của ảnh hiện tại:</span>
+            <div class="copy-box">
+              <code id="modal-hash-val">Chưa tải ảnh lên</code>
+              <button type="button" class="btn-copy-hash" id="btn-copy-modal-hash">
+                <i data-lucide="copy"></i> Sao chép
+              </button>
+            </div>
+          </div>
+        </main>
+        <footer class="modal-footer">
+          <button type="button" class="btn-primary-modal" id="btn-close-modal-ok">Đã hiểu</button>
+        </footer>
+      </div>
+    </div>
+    
+    <!-- Script chạy ứng dụng -->
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
