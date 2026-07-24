@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Đăng nhập quản trị viên | Desenio Gallery{% endblock %}
+
+{% block content %}
+<main class="login-page-section py-5 d-flex align-items-center" style="min-height: 80vh;">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-5 col-lg-4">
+        
+        <!-- Clean login card -->
+        <div class="card bg-dark text-light border-secondary-subtle p-4 shadow-lg rounded-4">
+          <div class="card-body">
+            <div class="text-center mb-4">
+              <div class="admin-login-icon mb-3">
+                <i data-lucide="lock" class="text-primary" style="width: 32px; height: 32px;"></i>
+              </div>
+              <h4 class="fw-bold mb-1">Admin Login</h4>
+              <p class="text-muted small">Nhập thông tin quản trị viên để quản lý hệ thống</p>
+            </div>
+            
+            <form action="{{ url_for('admin_login') }}" method="POST">
+              <!-- CSRF Token -->
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+              
+              <div class="mb-3">
+                <label for="username" class="form-label text-muted small uppercase">Tên đăng nhập</label>
+                <input type="text" class="form-control bg-black text-light border-secondary" id="username" name="username" placeholder="admin" required />
+              </div>
+              
+              <div class="mb-4">
+                <label for="password" class="form-label text-muted small uppercase">Mật khẩu</label>
+                <input type="password" class="form-control bg-black text-light border-secondary" id="password" name="password" placeholder="••••••••" required />
+              </div>
+              
+              <button type="submit" class="btn btn-primary w-100 py-2 fw-bold text-dark rounded-3 border-0">
+                Đăng Nhập
+              </button>
+            </form>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

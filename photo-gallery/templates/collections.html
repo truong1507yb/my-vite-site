@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Collections | Desenio Gallery{% endblock %}
+
+{% block content %}
+<main class="collections-page py-5">
+  <div class="container-xl">
+    <div class="page-header text-center mb-5">
+      <h1 class="display-6 fw-normal">Collections</h1>
+      <p class="text-muted">Bộ sưu tập ảnh nghệ thuật theo chủ đề tuyển chọn.</p>
+    </div>
+    
+    <div class="row g-4 justify-content-center">
+      <!-- Collection Card 1 -->
+      <div class="col-md-5 col-lg-4">
+        <div class="collection-card">
+          <div class="collection-img-box">
+            <div class="collection-img-overlay"></div>
+            <div class="collection-title-box">
+              <h3>Nature & Landscapes</h3>
+              <p>Hòa mình vào thiên nhiên hoang sơ</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Collection Card 2 -->
+      <div class="col-md-5 col-lg-4">
+        <div class="collection-card">
+          <div class="collection-img-box">
+            <div class="collection-img-overlay"></div>
+            <div class="collection-title-box">
+              <h3>Urban & Architecture</h3>
+              <p>Góc nhìn hình học của đô thị hiện đại</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Collection Card 3 -->
+      <div class="col-md-5 col-lg-4">
+        <div class="collection-card">
+          <div class="collection-img-box">
+            <div class="collection-img-overlay"></div>
+            <div class="collection-title-box">
+              <h3>Minimalism</h3>
+              <p>Nghệ thuật của sự tối giản và khoảng lặng</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

@@ -1,0 +1,166 @@
+@import "tailwindcss";
+
+:root {
+  --background: #FCFCFD;
+  --foreground: #111827;
+  --card: #F3F4F6;
+  --card-border: rgba(0, 0, 0, 0.08);
+  --primary-neon: #0284C7;
+  --secondary-neon: #6D28D9;
+  --rose-neon: #E11D48;
+  --footer-bg: #FFFFFF;
+  --footer-text: #374151;
+  --footer-border: #F3F4F6;
+}
+
+.dark {
+  --background: #080B14;
+  --foreground: #F9FAFB;
+  --card: #111827;
+  --card-border: rgba(255, 255, 255, 0.08);
+  --primary-neon: #00D4FF;
+  --secondary-neon: #7C3AED;
+  --rose-neon: #F43F5E;
+  --footer-bg: #0A0F1D;
+  --footer-text: #9CA3AF;
+  --footer-border: rgba(255, 255, 255, 0.06);
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-border: var(--card-border);
+  --color-primary-neon: var(--primary-neon);
+  --color-secondary-neon: var(--secondary-neon);
+  --color-rose-neon: var(--rose-neon);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  overflow-x: hidden;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  letter-spacing: -0.01em;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Glassmorphism styling */
+.glass-effect {
+  background: var(--card);
+  opacity: 0.95;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--card-border);
+}
+
+.glass-card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(0, 212, 255, 0.25);
+  box-shadow: 0 12px 40px rgba(0, 212, 255, 0.03);
+}
+
+/* Beautiful Text Gradients */
+.text-gradient-neon {
+  background: linear-gradient(135deg, var(--primary-neon) 0%, var(--secondary-neon) 50%, var(--rose-neon) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-cyan-purple {
+  background: linear-gradient(135deg, var(--primary-neon) 0%, var(--secondary-neon) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Neon buttons */
+.btn-neon-outline {
+  position: relative;
+  background: transparent;
+  color: var(--foreground);
+  border: 1px solid var(--card-border);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.btn-neon-outline:hover {
+  background: var(--card);
+  border-color: var(--primary-neon);
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.btn-neon-gradient {
+  background: linear-gradient(135deg, var(--primary-neon), var(--secondary-neon));
+  color: #FFFFFF;
+  font-weight: 700;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 15px rgba(0, 212, 255, 0.15);
+}
+
+.btn-neon-gradient:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 212, 255, 0.35);
+  filter: brightness(1.1);
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--card-border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-neon);
+}
+
+/* Glow widgets */
+.glow-spot-cyan {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, rgba(0, 0, 0, 0) 70%);
+  filter: blur(40px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.glow-spot-purple {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.08) 0%, rgba(0, 0, 0, 0) 70%);
+  filter: blur(50px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Base header layout adjustments */
+.main-header {
+  background: var(--background);
+  opacity: 0.96;
+}
+
+/* Redesigned Premium Footer */
+.main-footer {
+  width: 100%;
+  background-color: var(--footer-bg);
+  color: var(--footer-text);
+  border-top: 1px solid var(--footer-border);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.footer-top-columns {
+  border-bottom: 1px solid var(--footer-border);
+}

@@ -22,3 +22,15 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Python virtual environments, cache, and DBs
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.db
+.env
+photo-gallery/database.db
+photo-gallery/.env
+photo-gallery/venv/
+photo-gallery/__pycache__/

@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ image.title }} | Desenio Gallery{% endblock %}
+{% block meta_description %}{{ image.caption or 'Khám phá bức ảnh nghệ thuật độ nét cao này từ bộ sưu tập tư nhân.' }}{% endblock %}
+
+{% block og_title %}{{ image.title }} | Desenio Gallery{% endblock %}
+{% block og_description %}{{ image.caption or 'Xem chi tiết hình ảnh từ bộ sưu tập tư nhân.' }}{% endblock %}
+{% block og_image %}{{ url_for('static', filename='uploads/thumbs/' + image.filename) }}{% endblock %}
+
+{% block content %}
+<main class="image-detail-section py-5">
+  <div class="container-xl">
+    
+    <!-- Navigation row above the image -->
+    <div class="detail-navigation mb-4 d-flex justify-content-between align-items-center">
+      <a href="{{ url_for('index') }}" class="btn-back-to-gallery">
+        <i data-lucide="chevron-left"></i> Quay lại Gallery
+      </a>
+      
+      <div class="navigation-arrows">
+        {% if prev_id %}
+          <a href="{{ url_for('image_detail', image_id=prev_id) }}" class="nav-arrow-btn" title="Ảnh mới hơn">
+            <i data-lucide="arrow-left"></i> Trước
+          </a>
+        {% else %}
+          <span class="nav-arrow-btn disabled"><i data-lucide="arrow-left"></i> Trước</span>
+        {% endif %}
+        
+        {% if next_id %}
+          <a href="{{ url_for('image_detail', image_id=next_id) }}" class="nav-arrow-btn" title="Ảnh cũ hơn">
+            Sau <i data-lucide="arrow-right"></i>
+          </a>
+        {% else %}
+          <span class="nav-arrow-btn disabled">Sau <i data-lucide="arrow-right"></i></span>
+        {% endif %}
+      </div>
+    </div>
+    
+    <!-- Image Display Workspace -->
+    <div class="image-display-workspace mb-5">
+      <div class="display-container">
+        <!-- Serves the optimized display image (with watermark if enabled) -->
+        <img src="{{ url_for('static', filename='uploads/display/' + image.filename) }}" alt="{{ image.title }}" class="main-display-img shadow-lg img-fluid" />
+      </div>
+    </div>
+    
+    <!-- Image Info & Metadata -->
+    <div class="image-info-block mx-auto" style="max-width: 800px;">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center border-bottom pb-4 mb-4">
+        <div>
+          <h1 class="image-detail-title mb-2">{{ image.title }}</h1>
+          <div class="image-meta d-flex align-items-center gap-3 text-muted">
+            <span class="meta-item"><i data-lucide="user" class="me-1"></i> Tác giả: <strong>{{ image.author }}</strong></span>
+            <span class="meta-separator">|</span>
+            <span class="meta-item"><i data-lucide="calendar" class="me-1"></i> Ngày chụp: <strong>{{ image.upload_date.strftime('%d/%m/%Y') }}</strong></span>
+          </div>
+        </div>
+        
+        {% if image.watermark_enabled %}
+          <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle mt-3 mt-md-0 px-3 py-2">
+            <i data-lucide="shield-check" class="me-1" style="width: 14px; height: 14px;"></i> Đã xác thực bản quyền
+          </span>
+        {% endif %}
+      </div>
+      
+      {% if image.caption %}
+        <div class="image-caption-box mb-4">
+          <h5 class="caption-title mb-3">Mô tả tác phẩm</h5>
+          <p class="image-caption-text">{{ image.caption }}</p>
+        </div>
+      {% endif %}
+
+      <!-- Digital Copyright Certificate Widget -->
+      <div class="copyright-certificate-card p-4 rounded-4 border border-secondary-subtle">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="certificate-title mb-0 uppercase small fw-bold text-light letter-spacing-1">
+            <i data-lucide="shield-check" class="text-primary me-2"></i> CHỨNG NHẬN BẢN QUYỀN SỐ
+          </h5>
+          <span class="cert-status-pill text-success small fw-bold"><i data-lucide="check-circle" class="me-1" style="width: 14px; height: 14px;"></i> ĐÃ ĐĂNG KÝ BẢN QUYỀN SỐ</span>
+        </div>
+        <div class="row g-3 small text-muted">
+          <div class="col-sm-6">
+            <span class="text-muted d-block small uppercase mb-1">Tác giả / Chủ sở hữu</span>
+            <strong class="text-light">{{ image.author }}</strong>
+          </div>
+          <div class="col-sm-6">
+            <span class="text-muted d-block small uppercase mb-1">Ngày đăng ký bản quyền</span>
+            <strong class="text-light">{{ image.upload_date.strftime('%d/%m/%Y') }}</strong>
+          </div>
+          <div class="col-sm-12">
+            <span class="text-muted d-block small uppercase mb-1">Mã định danh ảnh</span>
+            <code class="text-light d-block text-truncate bg-black p-2 rounded border border-secondary">{{ image.filename }}</code>
+          </div>
+          <div class="col-sm-12">
+            <span class="text-muted d-block small uppercase mb-1">Chữ ký số mã hóa (SHA-256 Signature)</span>
+            <div class="d-flex align-items-center justify-content-between bg-black p-2 rounded border border-secondary mt-1">
+              <code class="text-primary text-truncate me-2" id="cert-signature">{{ image_hash }}</code>
+              <button class="btn btn-outline-primary btn-sm px-2 py-0-5" onclick="navigator.clipboard.writeText('{{ image_hash }}'); alert('Đã sao chép chữ ký số bản quyền!');" title="Sao chép chữ ký số">
+                <i data-lucide="copy" style="width: 14px; height: 14px;"></i> Copy
+              </button>
+            </div>
+          </div>
+          
+          <div class="col-sm-12 mt-4 d-flex gap-2">
+            <button type="button" class="btn btn-primary w-100 py-2 d-flex align-items-center justify-content-center gap-2" id="download-cert-btn">
+              <i data-lucide="award" style="width: 16px; height: 16px;"></i> Tải chứng nhận (.TXT)
+            </button>
+            <button type="button" class="btn btn-outline-secondary w-100 py-2 d-flex align-items-center justify-content-center gap-2" id="facebook-guide-btn">
+              <i data-lucide="help-circle" style="width: 16px; height: 16px;"></i> Hướng dẫn Facebook
+            </button>
+          </div>
+
+          <div class="col-sm-12 facebook-guide-panel mt-3 p-3 rounded bg-black border border-secondary hidden" id="facebook-guide-panel">
+            <h6 class="text-light fw-bold mb-2 small"><i data-lucide="info" class="text-primary me-1" style="width: 14px; height: 14px;"></i> Hướng dẫn Facebook Rights Manager:</h6>
+            <ol class="small text-muted ps-3 mb-0" style="line-height: 1.5;">
+              <li>Mở <strong>Meta Business Suite</strong> -> Chọn <strong>Trình quản lý Bản quyền (Rights Manager)</strong>.</li>
+              <li>Gửi đơn đăng ký sở hữu Bản quyền hình ảnh cho Trang của bạn.</li>
+              <li>Tải ảnh đã đóng dấu từ web lên làm <strong>Tệp đối chiếu (Reference File)</strong>.</li>
+              <li>Hệ thống AI của Facebook sẽ tự động so khớp dấu mộc mờ, tích xanh, mã QR và mã hóa SHA-256 để bảo vệ quyền sở hữu của bạn, tự động quét gỡ các trang reup giả mạo.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const downloadBtn = document.getElementById('download-cert-btn');
+        const guideBtn = document.getElementById('facebook-guide-btn');
+        const guidePanel = document.getElementById('facebook-guide-panel');
+        
+        if (guideBtn && guidePanel) {
+          guideBtn.addEventListener('click', function() {
+            guidePanel.classList.toggle('hidden');
+          });
+        }
+        
+        if (downloadBtn) {
+          downloadBtn.addEventListener('click', function() {
+            const title = "{{ image.title }}";
+            const author = "{{ image.author }}";
+            const filename = "{{ image.filename }}";
+            const date = "{{ image.upload_date.strftime('%d/%m/%Y') }}";
+            const hash = "{{ image_hash }}";
+            const verificationUrl = window.location.href;
+            
+            const content = `======================================================================
+              GIẤY XÁC NHẬN BẢN QUYỀN HÌNH ẢNH KỸ THUẬT SỐ
+                         (WATERMARK TRUST)
+======================================================================
+
+1. THÔNG TIN HÌNH ẢNH:
+- Tên tác phẩm: ${title}
+- Tên tệp ảnh: ${filename}
+- Mã khóa đối chiếu (SHA-256 Hash):
+  ${hash}
+
+2. THÔNG TIN CHỦ SỞ HỮU BẢN QUYỀN:
+- Tên tác giả / Trang sở hữu: ${author}
+- Đường dẫn đối chiếu xác thực: ${verificationUrl}
+- Thời gian đăng ký bản quyền: ${date}
+
+3. XÁC THỰC BẢN QUYỀN TRÊN FACEBOOK (META RIGHTS MANAGER):
+Hệ thống bảo vệ bản quyền của Facebook (Meta Rights Manager) tự động quét 
+so khớp hình ảnh bằng vân tay kỹ thuật số và dấu mộc bản quyền.
+
+Bước 1: Đăng ký quyền sử dụng Rights Manager
+- Truy cập Meta Business Suite thuộc sở hữu Page của bạn.
+- Vào mục "Rights Manager" (Trình quản lý bản quyền) và gửi đơn đăng ký.
+
+Bước 2: Tải lên tệp đối chiếu hình ảnh
+- Tải ảnh đã được đóng dấu của bạn lên thư viện đối chiếu của Meta.
+- Điền các thông tin chủ sở hữu trùng khớp với thông tin đã ghi nhận trong
+  Giấy chứng nhận này.
+
+Bước 3: Giải trình khi xảy ra tranh chấp
+- Mã SHA-256 Hash ở trên là bằng chứng không thể thay đổi về mặt toán học 
+  rằng tệp ảnh của bạn đã được sở hữu từ ngày ${date}.
+- Nếu gặp trường hợp bên thứ ba báo cáo sai lệch hoặc tranh chấp bản quyền, 
+  hãy đính kèm tệp ảnh gốc cùng file Giấy chứng nhận này để Facebook 
+  khôi phục quyền sở hữu cho bạn.
+
+======================================================================
+        Được tạo tự động bởi hệ thống xác thực Desenio Photo Gallery.
+======================================================================`;
+
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.download = `copyright_cert_${filename.split('.')[0]}.txt`;
+            link.href = url;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+          });
+        }
+      });
+      </script>
+    
+  </div>
+</main>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Discover Beautiful Photography | Desenio Gallery{% endblock %}
+
+{% block content %}
+<!-- Full-width Premium Hero Banner -->
+<section class="hero-banner">
+  <div class="hero-background-overlay"></div>
+  <div class="hero-content text-center">
+    <h2 class="hero-title animate-fade-in">Discover Beautiful Photography</h2>
+    <p class="hero-subtitle animate-fade-in-delayed">Explore high quality photographs from our private collection.</p>
+    <a href="#gallery-section" class="btn-hero-explore animate-fade-in-delayed2">Explore Gallery</a>
+  </div>
+</section>
+
+<!-- Gallery Section -->
+<section id="gallery-section" class="gallery-container-fluid py-5">
+  <div class="container-xl">
+    
+    {% if query %}
+      <div class="search-result-header mb-5 text-center">
+        <h3>Kết quả tìm kiếm cho: "<span class="text-primary">{{ query }}</span>"</h3>
+        <p class="text-muted">Tìm thấy {{ images|length }} tác phẩm phù hợp</p>
+      </div>
+    {% endif %}
+
+    <!-- Masonry Grid Layout -->
+    <div class="masonry-grid" id="masonry-grid">
+      {% for img in images %}
+        <div class="gallery-item-wrapper" data-id="{{ img.id }}">
+          <a href="{{ url_for('image_detail', image_id=img.id) }}" class="gallery-item-link">
+            <div class="gallery-item-img-box">
+              <img src="{{ url_for('static', filename='uploads/thumbs/' + img.thumbnail) }}" alt="{{ img.title }}" class="gallery-item-img" loading="lazy" />
+              <!-- Hover Overlay with Info -->
+              <div class="gallery-item-overlay">
+                <div class="overlay-top">
+                  <span class="img-author"><i data-lucide="camera" class="me-1"></i> {{ img.author }}</span>
+                  <span class="img-date"><i data-lucide="calendar" class="me-1"></i> {{ img.upload_date.strftime('%d/%m/%Y') }}</span>
+                </div>
+                <div class="overlay-middle">
+                  <h4 class="img-title">{{ img.title }}</h4>
+                  {% if img.caption %}
+                    <p class="img-caption">{{ img.caption|truncate(60) }}</p>
+                  {% endif %}
+                </div>
+                <div class="overlay-bottom">
+                  <span class="btn-view-photo">Xem chi tiết <i data-lucide="arrow-right" class="ms-1"></i></span>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      {% else %}
+        <div class="text-center py-5 my-5 w-100" id="empty-gallery-msg">
+          <div class="empty-state-icon mb-3">
+            <i data-lucide="image" class="text-muted" style="width: 48px; height: 48px;"></i>
+          </div>
+          <h4 class="text-muted">Chưa có bức ảnh nào</h4>
+          <p class="text-muted">Bộ sưu tập ảnh hiện tại đang trống. Vui lòng quay lại sau.</p>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Loading Indicator / Load More -->
+    <div class="gallery-actions text-center mt-5" id="gallery-load-more-section">
+      <div id="infinite-scroll-trigger" style="height: 10px;"></div>
+      <div class="spinner-border text-light hidden" role="status" id="loading-spinner">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Expose global variables to javascript
+  window.API_IMAGES_URL = "{{ url_for('api_images') }}";
+  window.IMAGE_DETAIL_BASE_URL = "/image/";
+  window.THUMBNAIL_BASE_URL = "{{ url_for('static', filename='uploads/thumbs/') }}";
+  window.QUERY_FILTER = "{{ query or '' }}";
+</script>
+{% endblock %}

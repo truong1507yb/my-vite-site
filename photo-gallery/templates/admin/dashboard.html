@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard Quản trị | Desenio Gallery{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard-container py-5">
+  <div class="container-xl">
+    
+    <!-- Dashboard Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center border-bottom pb-4 mb-4">
+      <div>
+        <h1 class="h2 mb-1 fw-bold text-light">Dashboard Quản trị</h1>
+        <p class="text-muted">Quản lý các tác phẩm nghệ thuật và đóng dấu bản quyền.</p>
+      </div>
+      <div class="d-flex gap-3 mt-3 mt-md-0">
+        <a href="{{ url_for('admin_upload') }}" class="btn btn-primary text-dark fw-bold px-4 py-2 border-0 rounded-3">
+          <i data-lucide="plus" class="me-1"></i> Thêm Ảnh Mới
+        </a>
+        <a href="{{ url_for('admin_logout') }}" class="btn btn-outline-danger px-4 py-2 rounded-3">
+          <i data-lucide="log-out" class="me-1"></i> Đăng xuất
+        </a>
+      </div>
+    </div>
+    
+    <!-- Statistics Widget -->
+    <div class="row g-4 mb-5">
+      <div class="col-md-4">
+        <div class="card bg-dark text-light border-secondary-subtle rounded-3 p-4 shadow-sm">
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <p class="text-muted small uppercase mb-1">Tổng số tác phẩm</p>
+              <h3 class="fw-bold mb-0 text-primary">{{ total_images }}</h3>
+            </div>
+            <div class="widget-icon bg-secondary-subtle p-3 rounded-circle text-primary">
+              <i data-lucide="image" style="width: 24px; height: 24px;"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Image List Table -->
+    <div class="card bg-dark text-light border-secondary-subtle rounded-4 shadow-lg overflow-hidden">
+      <div class="card-header bg-black py-3 border-secondary-subtle d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 fw-bold">Danh sách tác phẩm</h5>
+        <span class="badge bg-secondary-subtle text-secondary px-3 py-2">Mới nhất trước</span>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-dark table-hover align-middle mb-0">
+          <thead>
+            <tr>
+              <th scope="col" style="width: 100px;">Ảnh mẫu</th>
+              <th scope="col">Tiêu đề / Mô tả</th>
+              <th scope="col">Người đăng</th>
+              <th scope="col">Ngày chụp</th>
+              <th scope="col" class="text-center">Đóng dấu</th>
+              <th scope="col" class="text-end" style="width: 200px;">Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for img in images %}
+              <tr>
+                <td>
+                  <!-- Show thumbnail -->
+                  <img src="{{ url_for('static', filename='uploads/thumbs/' + img.thumbnail) }}" alt="{{ img.title }}" class="img-thumbnail bg-dark border-secondary rounded" style="width: 80px; height: 80px; object-fit: cover;" />
+                </td>
+                <td>
+                  <h6 class="mb-1 fw-bold text-light">{{ img.title }}</h6>
+                  {% if img.caption %}
+                    <p class="text-muted small mb-0 text-truncate" style="max-width: 300px;">{{ img.caption }}</p>
+                  {% else %}
+                    <span class="text-muted small italic">Không có mô tả</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <span class="text-light">{{ img.author }}</span>
+                </td>
+                <td>
+                  <span class="text-muted">{{ img.upload_date.strftime('%d/%m/%Y') }}</span>
+                </td>
+                <td class="text-center">
+                  {% if img.watermark_enabled %}
+                    <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1"><i data-lucide="check-circle" class="me-1" style="width: 12px; height: 12px;"></i> Bật</span>
+                  {% else %}
+                    <span class="badge bg-secondary-subtle text-secondary border border-secondary px-2 py-1">Tắt</span>
+                  {% endif %}
+                </td>
+                <td class="text-end">
+                  <div class="d-inline-flex gap-2">
+                    <a href="{{ url_for('admin_edit', image_id=img.id) }}" class="btn btn-outline-light btn-sm rounded px-3 py-1-5">
+                      <i data-lucide="edit-3" style="width: 14px; height: 14px;"></i> Sửa
+                    </a>
+                    
+                    <!-- POST Delete button with CSRF token -->
+                    <form action="{{ url_for('admin_delete', image_id=img.id) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa vĩnh viễn ảnh này?');">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+                      <button type="submit" class="btn btn-outline-danger btn-sm rounded px-3 py-1-5">
+                        <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i> Xóa
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            {% else %}
+              <tr>
+                <td colspan="6" class="text-center py-5">
+                  <div class="empty-state-icon mb-3">
+                    <i data-lucide="image" class="text-muted" style="width: 36px; height: 36px;"></i>
+                  </div>
+                  <p class="text-muted mb-0">Chưa có tác phẩm nào. Hãy bấm "Thêm Ảnh Mới" để bắt đầu.</p>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Meta SEO -->
+    <title>{% block title %}Watermark Trust Gallery - Discover Beautiful Photography{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}Khám phá các bức ảnh nghệ thuật độ nét cao được chụp bởi các nghệ sĩ nhiếp ảnh chuyên nghiệp từ bộ sưu tập tư nhân.{% endblock %}" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="{% block og_title %}Watermark Trust Gallery - Discover Beautiful Photography{% endblock %}" />
+    <meta property="og:description" content="{% block og_description %}Khám phá các bức ảnh nghệ thuật độ nét cao từ bộ sưu tập tư nhân.{% endblock %}" />
+    <meta property="og:image" content="{% block og_image %}{{ url_for('static', filename='css/hero-placeholder.jpg') }}{% endblock %}" />
+    
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    
+    {% block extra_head %}{% endblock %}
+  </head>
+  <body>
+    <!-- Premium Fixed Header -->
+    <!-- Premium Fixed Header (Inspired by 500px) -->
+    <header class="main-header">
+      <div class="header-container">
+        <!-- Logo Left -->
+        <div class="logo-area">
+          <a href="{{ url_for('index') }}" class="logo-link">
+            <span class="logo-text">DESENIO<span class="logo-dot-blue">.</span><span class="logo-dot-pink">.</span></span>
+            <span class="logo-sub">LICENSING</span>
+          </a>
+        </div>
+        
+        <!-- Menu Items (500px Style) -->
+        <nav class="navigation-menu d-none d-lg-flex">
+          <div class="nav-item-dropdown">
+            <a href="#" class="nav-link">Inspiration <i data-lucide="chevron-down" class="dropdown-arrow"></i></a>
+          </div>
+          <div class="nav-item-dropdown">
+            <a href="#" class="nav-link">Photographers <i data-lucide="chevron-down" class="dropdown-arrow"></i></a>
+          </div>
+          <a href="{{ url_for('collections') }}" class="nav-link {% if request.path == '/collections' %}active{% endif %}">Licensing</a>
+          <a href="{{ url_for('about') }}" class="nav-link {% if request.path == '/about' %}active{% endif %}">About</a>
+          <a href="#" class="nav-link">Memberships</a>
+        </nav>
+        
+        <!-- Search Bar Middle -->
+        <div class="search-area">
+          <form action="{{ url_for('index') }}" method="GET" class="search-form">
+            <i data-lucide="search" class="search-icon"></i>
+            <input type="text" name="q" placeholder="Search powered by AI..." value="{{ query or '' }}" />
+            {% if query %}
+              <a href="{{ url_for('index') }}" class="clear-search-btn" title="Clear search"><i data-lucide="x"></i></a>
+            {% endif %}
+          </form>
+        </div>
+        
+        <!-- Actions Right (Log In / Sign Up) -->
+        <div class="header-actions">
+          {% if session.get('admin_logged_in') %}
+            <a href="{{ url_for('admin_dashboard') }}" class="btn-dashboard-link me-2" title="Dashboard">
+              <i data-lucide="layout-dashboard"></i> <span class="d-none d-sm-inline">Dashboard</span>
+            </a>
+            <a href="{{ url_for('admin_logout') }}" class="btn-logout-link" title="Log out">
+              <i data-lucide="log-out"></i>
+            </a>
+          {% else %}
+            <a href="{{ url_for('admin_login') }}" class="btn-login-link me-3">Log in</a>
+            <a href="#" class="btn-signup-link d-none d-sm-inline-block" onclick="alert('Đăng ký hiện tại chỉ dành cho nhiếp ảnh gia nội bộ của Desenio.')">Sign up</a>
+          {% endif %}
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content wrapper -->
+    <div class="content-wrapper">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="container mt-4 pt-4">
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      {% block content %}{% endblock %}
+    </div>
+
+    <!-- Premium Brand Footer (Inspired by Flickr/Desenio) -->
+    <footer class="main-footer">
+      <div class="footer-top-columns container-xl py-5 border-bottom">
+        <div class="row g-4">
+          <!-- Col 1 -->
+          <div class="col-6 col-md-3">
+            <h5 class="footer-col-title">PRODUCT</h5>
+            <ul class="footer-links-list">
+              <li><a href="#">Features</a></li>
+              <li><a href="#">Desenio Pro</a></li>
+              <li><a href="#">The Apps</a></li>
+              <li><a href="#">Integrations</a></li>
+            </ul>
+          </div>
+          <!-- Col 2 -->
+          <div class="col-6 col-md-3">
+            <h5 class="footer-col-title">COMMUNITY</h5>
+            <ul class="footer-links-list">
+              <li><a href="#">Groups</a></li>
+              <li><a href="#">Events</a></li>
+              <li><a href="#">Photography Blog</a></li>
+              <li><a href="#">Forum</a></li>
+            </ul>
+          </div>
+          <!-- Col 3 -->
+          <div class="col-6 col-md-3">
+            <h5 class="footer-col-title">COMPANY</h5>
+            <ul class="footer-links-list">
+              <li><a href="{{ url_for('about') }}">About Us</a></li>
+              <li><a href="#">Sustainability</a></li>
+              <li><a href="#">Media Hub</a></li>
+              <li><a href="#">Work at Desenio</a></li>
+            </ul>
+          </div>
+          <!-- Col 4: Newsletter -->
+          <div class="col-12 col-md-3">
+            <h5 class="footer-col-title">NEWSLETTER</h5>
+            <p class="footer-newsletter-desc">Be the first to know about new collections and updates.</p>
+            <form class="footer-newsletter-form" onsubmit="event.preventDefault(); alert('Cảm ơn bạn đã đăng ký!'); this.reset();">
+              <input type="email" placeholder="Enter your email address" required />
+              <button type="submit"><i data-lucide="arrow-right"></i></button>
+            </form>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Footer Bottom with Badges -->
+      <div class="footer-bottom-bar container-xl py-4">
+        <div class="row align-items-center g-3">
+          <!-- Badges Left -->
+          <div class="col-12 col-md-6 d-flex flex-wrap gap-4 align-items-center justify-content-center justify-content-md-start">
+            <span class="badge-tag border px-2 py-1 text-muted small"><i data-lucide="globe" class="me-1"></i> Global License</span>
+            <span class="badge-tag border px-2 py-1 text-muted small"><i data-lucide="award" class="me-1"></i> 100% Verified</span>
+            <span class="badge-tag border px-2 py-1 text-muted small"><i data-lucide="shield-check" class="me-1"></i> Secure Storage</span>
+          </div>
+          <!-- Copyright Right -->
+          <div class="col-12 col-md-6 text-center text-md-end">
+            <div class="footer-legal-links mb-2">
+              <a href="#">Legal</a>
+              <a href="#">Terms</a>
+              <a href="#">Privacy</a>
+              <a href="#">Cookies</a>
+            </div>
+            <p class="copyright">COPYRIGHT ©2026 DESENIO GROUP, INC. ALL RIGHTS RESERVED</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Initialize Lucide Icons -->
+    <script>
+      lucide.createIcons();
+    </script>
+    
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>
